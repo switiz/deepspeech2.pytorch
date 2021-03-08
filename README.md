@@ -123,7 +123,7 @@ CER : 0.35 (35%)
 | 때리진 않았지?    | <sos>때리진  않았지?   |
 
 
-###Reference
+### Reference
 
     @ARTICLE{2021-kospeech,
       author    = {Kim, Soohwan and Bae, Seyoung and Won, Cheolhwang},
