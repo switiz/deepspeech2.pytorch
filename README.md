@@ -118,4 +118,15 @@ CER : 0.35 (35%)
 | 때리진 않았지?    | <sos>때리진  않았지?   |
 
 
+###Reference
 
+    @ARTICLE{2021-kospeech,
+      author    = {Kim, Soohwan and Bae, Seyoung and Won, Cheolhwang},
+      title     = {KoSpeech: Open-Source Toolkit for End-to-End Korean Speech Recognition},
+      url       = {https://www.sciencedirect.com/science/article/pii/S2665963821000026},
+      month     = {February},
+      year      = {2021},
+      publisher = {ELSEVIER},
+      journal   = {SIMPAC},
+      pages     = {Volume 7, 100054}
+    }
