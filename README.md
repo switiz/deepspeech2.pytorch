@@ -15,7 +15,6 @@ Original git (Kospeech): https://github.com/sooftware/KoSpeech
 
 ### Note
  - KospoonSpeech preprocess code import
- - single file inference
 
 --- 
 ### Step 1 PreProcess (추가예정)
