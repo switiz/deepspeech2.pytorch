@@ -1,5 +1,5 @@
 # DeepSpeech2 
-###(Pytorch Implementation using AIHUB data)
+### (Pytorch Implementation using AIHUB data)
 #### Paper: https://arxiv.org/abs/1512.02595
 
 ----
