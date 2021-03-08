@@ -1,0 +1,47 @@
+#traiin dataset
+root : C:/SpeechRecognitionDataset/Dataset/AI_hub
+script_data_path: C:/Users/sanma/PycharmProjects/deepspeech2.pytorch/data/aihub/transcripts.txt
+vocab_path: C:/Users/sanma/PycharmProjects/deepspeech2.pytorch/data/aihub/aihub_labels.csv
+
+#input feature
+feature: melspectrogram
+n_mels : 80
+use_npy: False
+split_balance : 0.1
+
+#train
+batch_size: 8
+epochs: 10
+use_cuda: True
+cer_every: 10000
+
+#model_save_load
+resume: False
+save_every: 1
+#inference
+inference: True
+use_val_data: True
+weight_path: C:/Users/sanma/PycharmProjects/deepspeech2.pytorch/runs/2021_03_04_10_26_57/pretrained.pt
+
+#root : C:/SpeechRecognitionDataset/Dataset/AI_hub
+#script_data_path: C:/Users/sanma/PycharmProjects/deepspeech2.pytorch/data/aihub/transcripts.txt
+#vocab_path: C:/Users/sanma/PycharmProjects/deepspeech2.pytorch/data/aihub/aihub_labels.csv
+#model_save_path: C:/Users/sanma/PycharmProjects/deepspeech2.pytorch/data/runs/train.pt
+
+
+#validation
+validation_every: 5
+
+#input
+hidden_dim : 1024
+activation: hardtanh
+use_bidirectional: True
+rnn_type: gru
+num_encoder_layers: 3
+dropout_p: 0.3
+
+#optimizer
+#optimizer: adam
+#init_lr: 1e-06
+#scheduler: CyclicLR
+
