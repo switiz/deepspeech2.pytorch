@@ -21,7 +21,7 @@ save_every: 1
 #inference
 inference: True
 use_val_data: True
-weight_path: C:/Users/sanma/PycharmProjects/deepspeech2.pytorch/runs/2021_03_04_10_26_57/pretrained.pt
+weight_path: C:/Users/sanma/PycharmProjects/deepspeech2.pytorch/weights/pretrained.pt
 
 #root : C:/SpeechRecognitionDataset/Dataset/AI_hub
 #script_data_path: C:/Users/sanma/PycharmProjects/deepspeech2.pytorch/data/aihub/transcripts.txt
