@@ -3,18 +3,49 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 import yaml
 import argparse
+import numpy as np
+import librosa
 
 from dataset import dataset
 from ksponspeech import KsponSpeechVocabulary
 from utils import check_envirionment, char_errors, save_result, make_out, load_model, Timer
 from model.deepspeech import DeepSpeech2
 
+def load_audio(audio_path, extension='pcm'):
+    """
+    Load audio file (PCM) to sound. if del_silence is True, Eliminate all sounds below 30dB.
+    If exception occurs in numpy.memmap(), return None.
+    """
+    if extension == 'pcm':
+        signal = np.memmap(audio_path, dtype='h', mode='r').astype('float32')
+        return signal / 32767  # normalize audio
+
+    elif extension == 'wav' or extension == 'flac':
+        signal, _ = librosa.load(audio_path, sr=16000)
+        return signal
+
+
+def parse_audio(audio_path, audio_extension='pcm'):
+    signal = load_audio(audio_path, extension=audio_extension)
+    sample_rate = 16000
+    frame_length = 20
+    frame_shift = 10
+    n_fft = int(round(sample_rate * 0.001 * frame_length))
+    hop_length = int(round(sample_rate * 0.001 * frame_shift))
+
+    if opt['feature'] == 'melspectrogram':
+        feature = librosa.feature.melspectrogram(signal, sample_rate, n_fft=n_fft, n_mels=opt['n_mels'],
+                                                 hop_length=hop_length)
+        feature = librosa.amplitude_to_db(feature, ref=np.max)
+
+    return torch.FloatTensor(feature).transpose(0, 1)
+
+
 def inference(opt):
     timer = Timer()
     timer.log('Load Data')
     device = check_envirionment(opt['use_cuda'])
     vocab = KsponSpeechVocabulary(opt['vocab_path'])
-    metric = char_errors(vocab)
 
     if opt['use_val_data']:
         val_dataset = dataset(opt, vocab, train=False)
@@ -22,9 +53,10 @@ def inference(opt):
                                 num_workers=8, collate_fn=val_dataset._collate_fn)
     else:
         #custom_dataset
-        custom_dataset = dataset(opt, vocab, train=False)
-        custom_loader = DataLoader(dataset=custom_dataset, batch_size=opt['batch_size'] * 2, drop_last=True,
-                                   num_workers=8, collate_fn=custom_dataset._collate_fn)
+        feature = parse_audio(opt['audio_path'])
+        feature = feature.to(device)
+        input_length = torch.LongTensor([len(feature)])
+
     model = DeepSpeech2(
         input_size=opt['n_mels'],
         num_classes=len(vocab),
@@ -43,35 +75,23 @@ def inference(opt):
     print('-'*40)
 
     timer.startlog('Inference Start')
-    do_inference(custom_loader, vocab, model, device, metric)
-    timer.endlog('Inference complete')
-
-def do_inference(val_loader, vocab, model, device, metric):
     model.eval()
-    progress_bar = tqdm(val_loader)
-    target_list = list()
-    predict_list = list()
-    cer = 0.0
-    for idx, data in enumerate(progress_bar):
-        inputs, targets, input_lengths, target_lengths = data
-        inputs = inputs.to(device)
-        targets = targets[:, 1:].to(device)
-        y_hats = model.greedy_search(inputs, input_lengths)
-        for i in range(targets.size(0)):
-            predict_list.append(vocab.label_to_string(y_hats[i].cpu().detach().numpy()))
-    save_path = make_out()
-    save_result(save_path, target_list, predict_list, inference=True)
-    return cer
+    y_hats = model.greedy_search(feature.unsqueeze(0), input_length)
+    sentance = vocab.label_to_string(y_hats.cpu().detach().numpy())
+    print(sentance)
+    timer.endlog('Inference complete')
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--weight_path', type=str, default='pretrained.pt', help='initial weights path')
+    parser.add_argument('--audio_path', type=str, default='', help='audio_path')
     option = parser.parse_args()
 
     with open('./data/config.yaml') as f:
         opt = yaml.load(f, Loader=yaml.FullLoader)
-    if option.weight_path != 'pretrained.pt':
-        opt['weight_path'] = option.weight_path
+    if option.audio_path != '':
+        opt['audio_path'] = option.audio_path
+        opt['use_val_data'] = False
 
+    opt['inference'] = True
     inference(opt)

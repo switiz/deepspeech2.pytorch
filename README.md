@@ -94,11 +94,16 @@ python train.py --resume
 [pretrained weight](https://drive.google.com/drive/folders/1coWx1pOBFwPnWYShE_h896qH0p_2Z760?usp=sharing)
 
 inference.py를 실행하면 되며 현재는 validation data를 이용하여 inference하도록 되어있습니다.
-validation data가 아닌 custom data의 경우 현재는 별도의 dataset를 생성해야합니다.
 
 ```
 python inference.py
 ```
+특정 파일 inference를 위해서는 아래처럼 audio_path argment를 이용하면 됩니다.
+```
+python inference.py --audio_path 'audio_file'
+```
+
+![img.png](img.png)
 
 ### Step 5 Result
 데이터셋 : AIHUB 1000h Korean speech data corpus
