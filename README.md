@@ -3,15 +3,18 @@
 #### Paper: https://arxiv.org/abs/1512.02595
 
 ----
-한국어 음성인식 모델이 종합된 Kospeech의 경우 다양한 모델을 지원함에 따라 코드 복잡도가 높아 단순 모델 학습에는 용의하지 않습니다.
-
+한국어 음성인식 모델이 종합된 Kospeech의 경우 다양한 모델을 지원함에 따라 코드 복잡도가 높아 단순 모델 학습에는 용의하지 않습니다. 
 그래서 본 git은 Kospeech의 모델 코드를 이용하여 몇몇 버그 수정 및 단순화에 집중하였습니다.
 
-LAS-> Transformer -> Conformer -> RnnT순으로 추가예정입니다.
+**DeepSpeech2** -> LAS-> LAS(SpecAgument) -> Transformer -> Conformer -> RnnT순으로 추가예정입니다.
 
 코드 사용을 허락해주신 Kospeech Author 김수환 님에게 감사드립니다.
 
 Original git (Kospeech): https://github.com/sooftware/KoSpeech
+
+### Kospeech Split project
+
+-  LAS: https://github.com/switiz/las.pytorch
 
 ### Note
  - KospoonSpeech preprocess code import
